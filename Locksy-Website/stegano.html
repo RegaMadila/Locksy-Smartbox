@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Steganografi Login (Eksperimental)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom styles for Inter font */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Hide canvas by default, show only when needed for processing */
+      canvas {
+        display: none;
+      }
+      /* Basic styling for messages */
+      .message-box {
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+        font-weight: 500;
+      }
+      .message-success {
+        background-color: #d1fae5; /* green-100 */
+        color: #065f46; /* green-800 */
+        border: 1px solid #34d399; /* green-400 */
+      }
+      .message-error {
+        background-color: #fee2e2; /* red-100 */
+        color: #991b1b; /* red-800 */
+        border: 1px solid #f87171; /* red-400 */
+      }
+      .warning-box {
+        background-color: #fffbeb; /* yellow-100 */
+        color: #92400e; /* yellow-800 */
+        border: 1px solid #fcd34d; /* yellow-400 */
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div
+      class="bg-white p-8 rounded-lg shadow-xl w-full max-w-4xl flex flex-col md:flex-row gap-8"
+    >
+      <!-- Peringatan Keamanan
+      <div class="warning-box md:col-span-2 w-full">
+        <p class="font-bold">PERINGATAN KEAMANAN:</p>
+        <p>
+          Aplikasi ini dibuat HANYA untuk tujuan eksperimen dan pembelajaran
+          konsep steganografi.
+        </p>
+        <p class="mt-2">
+          Menyimpan username dan password, bahkan yang disematkan dalam gambar,
+          menggunakan teknik ini atau di `localStorage` adalah **SANGAT TIDAK
+          AMAN** untuk sistem login di dunia nyata.
+        </p>
+        <p>
+          Kredensial Anda akan disimpan di browser lokal Anda dan dapat diakses
+          dengan mudah.
+        </p>
+        <p class="mt-2">Jangan gunakan kredensial asli atau sensitif.</p>
+      </div> -->
+
+      <!-- Bagian Registrasi -->
+      <div class="flex-1 p-6 border border-gray-200 rounded-lg bg-gray-50">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Registrasi (Sematkan Kredensial)
+        </h2>
+        <div class="mb-4">
+          <label
+            for="regUsername"
+            class="block text-gray-700 text-sm font-semibold mb-2"
+            >Username:</label
+          >
+          <input
+            type="text"
+            id="regUsername"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Masukkan username"
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="regPassword"
+            class="block text-gray-700 text-sm font-semibold mb-2"
+            >Password:</label
+          >
+          <input
+            type="password"
+            id="regPassword"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Masukkan password"
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            for="regImage"
+            class="block text-gray-700 text-sm font-semibold mb-2"
+            >Pilih Gambar (PNG/BMP disarankan):</label
+          >
+          <input
+            type="file"
+            id="regImage"
+            accept="image/png, image/bmp"
+            class="w-full text-gray-700 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+          <p class="text-xs text-gray-500 mt-1">
+            Ukuran gambar yang lebih besar akan memberikan lebih banyak ruang
+            untuk data.
+          </p>
+        </div>
+        <button
+          id="registerBtn"
+          class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out"
+        >
+          Sematkan & Unduh Gambar
+        </button>
+        <div id="regMessage" class="message-box hidden"></div>
+      </div>
+
+      <!-- Bagian Login -->
+      <div class="flex-1 p-6 border border-gray-200 rounded-lg bg-gray-50">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Login (Verifikasi Kredensial)
+        </h2>
+        <div class="mb-4">
+          <label
+            for="loginUsername"
+            class="block text-gray-700 text-sm font-semibold mb-2"
+            >Username (Manual):</label
+          >
+          <input
+            type="text"
+            id="loginUsername"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="Masukkan username"
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="loginPassword"
+            class="block text-gray-700 text-sm font-semibold mb-2"
+            >Password (Manual):</label
+          >
+          <input
+            type="password"
+            id="loginPassword"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="Masukkan password"
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            for="loginImage"
+            class="block text-gray-700 text-sm font-semibold mb-2"
+            >Atau Unggah Gambar Tersemat:</label
+          >
+          <input
+            type="file"
+            id="loginImage"
+            accept="image/png, image/bmp"
+            class="w-full text-gray-700 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+          />
+        </div>
+        <button
+          id="loginBtn"
+          class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out"
+        >
+          Login
+        </button>
+        <div id="loginMessage" class="message-box hidden"></div>
+      </div>
+    </div>
+
+    <!-- Canvas untuk manipulasi gambar (disembunyikan) -->
+    <canvas id="imageCanvas" class="hidden"></canvas>
+
+    <script>
+      // Dapatkan elemen DOM
+      const regUsernameInput = document.getElementById("regUsername");
+      const regPasswordInput = document.getElementById("regPassword");
+      const regImageInput = document.getElementById("regImage");
+      const registerBtn = document.getElementById("registerBtn");
+      const regMessageDiv = document.getElementById("regMessage");
+
+      const loginUsernameInput = document.getElementById("loginUsername");
+      const loginPasswordInput = document.getElementById("loginPassword");
+      const loginImageInput = document.getElementById("loginImage");
+      const loginBtn = document.getElementById("loginBtn");
+      const loginMessageDiv = document.getElementById("loginMessage");
+
+      const imageCanvas = document.getElementById("imageCanvas");
+      // Mendapatkan konteks 2D dengan atribut willReadFrequently
+      const ctx = imageCanvas.getContext("2d", { willReadFrequently: true });
+
+      // Objek untuk menyimpan pengguna yang terdaftar (akan dimuat dari localStorage)
+      let registeredUsers = {};
+
+      // --- Fungsi Utilitas Steganografi Sederhana (LSB) ---
+
+      /**
+       * Mengonversi teks menjadi string biner.
+       * @param {string} text - Teks yang akan dikonversi.
+       * @returns {string} String biner.
+       */
+      function textToBinary(text) {
+        return text
+          .split("")
+          .map((char) => {
+            // Konversi karakter ke kode ASCII, lalu ke biner 8-bit
+            return char.charCodeAt(0).toString(2).padStart(8, "0");
+          })
+          .join("");
+      }
+
+      /**
+       * Mengonversi string biner menjadi teks.
+       * @param {string} binary - String biner yang akan dikonversi.
+       * @returns {string} Teks yang dihasilkan.
+       */
+      function binaryToText(binary) {
+        let text = "";
+        // Proses biner dalam kelompok 8-bit
+        for (let i = 0; i < binary.length; i += 8) {
+          const byte = binary.substring(i, i + 8);
+          text += String.fromCharCode(parseInt(byte, 2));
+        }
+        return text;
+      }
+
+      /**
+       * Menyematkan data biner ke dalam data piksel gambar menggunakan LSB.
+       * Data diawali dengan panjang data biner (32 bit) diikuti oleh data itu sendiri.
+       * @param {ImageData} imageData - Objek ImageData dari kanvas.
+       * @param {string} binaryData - Data biner yang akan disematkan.
+       * @returns {ImageData} Objek ImageData yang dimodifikasi.
+       */
+      function embedData(imageData, binaryData) {
+        const data = imageData.data;
+        // Tambahkan panjang data biner sebagai awalan 32-bit
+        const dataLengthBinary = binaryData.length
+          .toString(2)
+          .padStart(32, "0");
+        const fullBinaryData = dataLengthBinary + binaryData;
+
+        // Pastikan ada cukup ruang dalam gambar
+        // Setiap piksel (RGBA) memiliki 4 byte, kita gunakan 3 byte (RGB) untuk LSB
+        // Jadi, setiap piksel dapat menyimpan 3 bit.
+        // Jumlah bit yang dibutuhkan: fullBinaryData.length
+        // Jumlah piksel yang dibutuhkan: Math.ceil(fullBinaryData.length / 3)
+        const requiredPixels = Math.ceil(fullBinaryData.length / 3);
+        if (requiredPixels * 4 > data.length) {
+          displayMessage(
+            regMessageDiv,
+            "Ukuran gambar terlalu kecil untuk menyematkan data ini.",
+            "error"
+          );
+          throw new Error("Image too small to embed data.");
+        }
+
+        let bitIndex = 0;
+        // Iterasi melalui setiap komponen warna (R, G, B) dari setiap piksel
+        // Abaikan komponen Alpha (indeks 3, 7, 11, dst.)
+        for (
+          let i = 0;
+          i < data.length && bitIndex < fullBinaryData.length;
+          i += 4
+        ) {
+          // Sematkan bit ke komponen Merah (R)
+          if (bitIndex < fullBinaryData.length) {
+            data[i] = (data[i] & 0xfe) | parseInt(fullBinaryData[bitIndex++]);
+          }
+          // Sematkan bit ke komponen Hijau (G)
+          if (bitIndex < fullBinaryData.length) {
+            data[i + 1] =
+              (data[i + 1] & 0xfe) | parseInt(fullBinaryData[bitIndex++]);
+          }
+          // Sematkan bit ke komponen Biru (B)
+          if (bitIndex < fullBinaryData.length) {
+            data[i + 2] =
+              (data[i + 2] & 0xfe) | parseInt(fullBinaryData[bitIndex++]);
+          }
+          // Komponen Alpha (data[i+3]) tidak diubah
+        }
+        return imageData;
+      }
+
+      /**
+       * Mengekstrak data biner dari data piksel gambar menggunakan LSB.
+       * @param {ImageData} imageData - Objek ImageData dari kanvas.
+       * @returns {string} Data biner yang diekstrak.
+       */
+      function extractData(imageData) {
+        const data = imageData.data;
+        let extractedBits = "";
+        let dataLength = 0;
+        let lengthBitsRead = 0;
+
+        // Pertama, ekstrak 32 bit pertama untuk mendapatkan panjang data
+        for (let i = 0; i < data.length && lengthBitsRead < 32; i += 4) {
+          extractedBits += (data[i] & 1).toString(); // R channel
+          lengthBitsRead++;
+          if (lengthBitsRead === 32) break;
+
+          extractedBits += (data[i + 1] & 1).toString(); // G channel
+          lengthBitsRead++;
+          if (lengthBitsRead === 32) break;
+
+          extractedBits += (data[i + 2] & 1).toString(); // B channel
+          lengthBitsRead++;
+          if (lengthBitsRead === 32) break;
+        }
+
+        if (lengthBitsRead < 32) {
+          throw new Error("Tidak cukup bit untuk mengekstrak panjang data.");
+        }
+        dataLength = parseInt(extractedBits.substring(0, 32), 2);
+        extractedBits = ""; // Reset untuk data aktual
+
+        // Lanjutkan ekstraksi data aktual
+        let bitCount = 0;
+        // Mulai dari piksel setelah 32 bit pertama diekstrak
+        // (i = 0 pada iterasi pertama, tapi kita sudah membaca 32 bit, jadi lanjut dari sana)
+        // Perhatikan bahwa kita perlu menghitung ulang indeks awal setelah membaca panjang data.
+        // Setiap 3 bit membutuhkan 1 piksel (R, G, B). Jadi 32 bit membutuhkan ceil(32/3) = 11 piksel.
+        // Indeks awal data piksel untuk data aktual adalah 11 * 4 = 44.
+        for (
+          let i = Math.ceil(32 / 3) * 4;
+          i < data.length && bitCount < dataLength;
+          i += 4
+        ) {
+          extractedBits += (data[i] & 1).toString(); // R channel
+          bitCount++;
+          if (bitCount === dataLength) break;
+
+          extractedBits += (data[i + 1] & 1).toString(); // G channel
+          bitCount++;
+          if (bitCount === dataLength) break;
+
+          extractedBits += (data[i + 2] & 1).toString(); // B channel
+          bitCount++;
+          if (bitCount === dataLength) break;
+        }
+
+        if (bitCount < dataLength) {
+          throw new Error("Tidak cukup bit untuk mengekstrak data lengkap.");
+        }
+
+        return extractedBits;
+      }
+
+      /**
+       * Menampilkan pesan di div pesan yang diberikan.
+       * @param {HTMLElement} element - Elemen div pesan.
+       * @param {string} message - Teks pesan.
+       * @param {'success'|'error'} type - Tipe pesan (untuk styling).
+       */
+      function displayMessage(element, message, type) {
+        element.textContent = message;
+        element.classList.remove("hidden", "message-success", "message-error");
+        element.classList.add(`message-${type}`);
+      }
+
+      /**
+       * Menyembunyikan pesan di div pesan yang diberikan.
+       * @param {HTMLElement} element - Elemen div pesan.
+       */
+      function hideMessage(element) {
+        element.classList.add("hidden");
+      }
+
+      /**
+       * Memuat pengguna yang terdaftar dari localStorage.
+       */
+      function loadRegisteredUsers() {
+        const storedUsers = localStorage.getItem("registeredUsers");
+        if (storedUsers) {
+          registeredUsers = JSON.parse(storedUsers);
+        } else {
+          // Tambahkan pengguna hardcoded jika belum ada di localStorage
+          registeredUsers = {
+            user1: "pass123",
+            admin: "securepass",
+          };
+        }
+      }
+
+      /**
+       * Menyimpan pengguna yang terdaftar ke localStorage.
+       */
+      function saveRegisteredUsers() {
+        localStorage.setItem(
+          "registeredUsers",
+          JSON.stringify(registeredUsers)
+        );
+      }
+
+      // Muat pengguna saat aplikasi dimulai
+      loadRegisteredUsers();
+
+      // --- Event Listener Registrasi ---
+      registerBtn.addEventListener("click", () => {
+        hideMessage(regMessageDiv);
+        const username = regUsernameInput.value.trim();
+        const password = regPasswordInput.value.trim();
+        const imageFile = regImageInput.files[0];
+
+        if (!username || !password) {
+          displayMessage(
+            regMessageDiv,
+            "Username dan Password tidak boleh kosong.",
+            "error"
+          );
+          return;
+        }
+        if (!imageFile) {
+          displayMessage(
+            regMessageDiv,
+            "Pilih gambar untuk disematkan.",
+            "error"
+          );
+          return;
+        }
+
+        // Tambahkan pengguna baru ke daftar yang terdaftar dan simpan
+        registeredUsers[username] = password;
+        saveRegisteredUsers();
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            imageCanvas.width = img.width;
+            imageCanvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+
+            try {
+              const imageData = ctx.getImageData(0, 0, img.width, img.height);
+              const dataToEmbed = `${username}:${password}`; // Format: username:password
+              const binaryData = textToBinary(dataToEmbed);
+
+              const modifiedImageData = embedData(imageData, binaryData);
+              ctx.putImageData(modifiedImageData, 0, 0);
+
+              // Buat link unduh untuk gambar yang dimodifikasi
+              const downloadLink = document.createElement("a");
+              downloadLink.href = imageCanvas.toDataURL("image/png"); // PNG disarankan untuk LSB karena lossless
+              downloadLink.download = `stego_${username}.png`;
+
+              // Programmatically click the link to trigger download
+              document.body.appendChild(downloadLink); // Temporarily append to body to make it clickable
+              downloadLink.click();
+              document.body.removeChild(downloadLink); // Remove it after clicking
+
+              displayMessage(
+                regMessageDiv,
+                "Kredensial berhasil disematkan dan gambar diunduh! Data tersimpan di browser.",
+                "success"
+              );
+            } catch (error) {
+              console.error("Error during embedding:", error);
+              displayMessage(
+                regMessageDiv,
+                `Gagal menyematkan data: ${error.message}`,
+                "error"
+              );
+            }
+          };
+          img.onerror = () => {
+            displayMessage(
+              regMessageDiv,
+              "Gagal memuat gambar. Pastikan itu adalah file gambar yang valid.",
+              "error"
+            );
+          };
+          img.src = e.target.result;
+        };
+        reader.onerror = () => {
+          displayMessage(regMessageDiv, "Gagal membaca file gambar.", "error");
+        };
+        reader.readAsDataURL(imageFile);
+      });
+
+      // --- Event Listener Login ---
+      loginBtn.addEventListener("click", () => {
+        hideMessage(loginMessageDiv);
+        const manualUsername = loginUsernameInput.value.trim();
+        const manualPassword = loginPasswordInput.value.trim();
+        const loginImageFile = loginImageInput.files[0];
+
+        if (loginImageFile) {
+          // Login via gambar
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              imageCanvas.width = img.width;
+              imageCanvas.height = img.height;
+              ctx.drawImage(img, 0, 0);
+
+              try {
+                const imageData = ctx.getImageData(0, 0, img.width, img.height);
+                const extractedBinary = extractData(imageData);
+                const extractedText = binaryToText(extractedBinary);
+
+                // Format yang diharapkan: "username:password"
+                const parts = extractedText.split(":");
+                if (parts.length === 2) {
+                  const extractedUsername = parts[0];
+                  const extractedPassword = parts[1];
+
+                  // Verifikasi simulasi
+                  if (
+                    registeredUsers[extractedUsername] === extractedPassword
+                  ) {
+                    displayMessage(
+                      loginMessageDiv,
+                      `Login Berhasil! Selamat datang, ${extractedUsername}. (Dari Gambar)`,
+                      "success"
+                    );
+                  } else {
+                    displayMessage(
+                      loginMessageDiv,
+                      "Login Gagal. Kredensial tidak valid atau tidak ditemukan dalam gambar.",
+                      "error"
+                    );
+                  }
+                } else {
+                  displayMessage(
+                    loginMessageDiv,
+                    "Format data tersemat tidak valid.",
+                    "error"
+                  );
+                }
+              } catch (error) {
+                console.error("Error during extraction:", error);
+                displayMessage(
+                  loginMessageDiv,
+                  `Gagal mengekstrak data dari gambar: ${error.message}`,
+                  "error"
+                );
+              }
+            };
+            img.onerror = () => {
+              displayMessage(
+                loginMessageDiv,
+                "Gagal memuat gambar. Pastikan itu adalah file gambar yang valid.",
+                "error"
+              );
+            };
+            img.src = e.target.result;
+          };
+          reader.onerror = () => {
+            displayMessage(
+              loginMessageDiv,
+              "Gagal membaca file gambar.",
+              "error"
+            );
+          };
+          reader.readAsDataURL(loginImageFile);
+        } else if (manualUsername && manualPassword) {
+          // Login via input manual
+          if (registeredUsers[manualUsername] === manualPassword) {
+            displayMessage(
+              loginMessageDiv,
+              `Login Berhasil! Selamat datang, ${manualUsername}. (Manual)`,
+              "success"
+            );
+          } else {
+            displayMessage(
+              loginMessageDiv,
+              "Login Gagal. Username atau Password salah.",
+              "error"
+            );
+          }
+        } else {
+          displayMessage(
+            loginMessageDiv,
+            "Masukkan Username & Password, atau unggah Gambar Tersemat.",
+            "error"
+          );
+        }
+      });
+    </script>
+  </body>
+</html>

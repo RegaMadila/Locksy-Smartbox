@@ -1,0 +1,273 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Main container: Use flex-col on small screens, flex-row on md and up -->
+    <div class="flex flex-1 min-h-0 flex-col md:flex-row">
+      <!-- Left side (Form) -->
+      <!-- On small screens (default), take full width (w-full).
+           On md screens and up, take half width (md:w-1/2).
+           Adjust padding to avoid being too cramped on mobile.
+      -->
+      <div class="flex flex-col items-center justify-between w-full md:w-1/2 p-4 sm:p-8 md:p-12">
+        <div class="max-w-[360px] w-full mt-12 mb-auto"> <!-- Added mb-auto so the form doesn't push down if content is small -->
+          <h2 class="text-[#1E2A5B] font-semibold text-2xl mb-2 text-center md:text-left">Register</h2>
+          <p class="text-xs text-[#8F9BB3] mb-6 text-center md:text-left">
+            Enter your details to create an account!
+          </p>
+          <!-- Update the form tag to add id -->
+          <form
+            id="registerForm"
+            autocomplete="off"
+            class="space-y-6 mt-8"
+            novalidate=""
+          >
+            <div>
+              <label
+                class="block text-sm font-semibold text-[#1E2A5B] mb-2"
+                for="name"
+              >
+                Name
+                <span class="text-red-600"> * </span>
+              </label>
+              <input
+                class="w-full text-sm text-[#1E2A5B] placeholder:text-[#D1D5DB] border border-[#E6E8F0] rounded-md py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#3B33FF]"
+                id="name"
+                name="name"
+                placeholder="John Doe"
+                required=""
+                type="text"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-semibold text-[#1E2A5B] mb-2"
+                for="email"
+              >
+                Email
+                <span class="text-red-600"> * </span>
+              </label>
+              <input
+                class="w-full text-sm text-[#1E2A5B] placeholder:text-[#D1D5DB] border border-[#E6E8F0] rounded-md py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#3B33FF]"
+                id="email"
+                name="email"
+                placeholder="mail@simmmple.com"
+                required=""
+                type="email"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-semibold text-[#1E2A5B] mb-2"
+                for="password"
+              >
+                Password
+                <span class="text-red-600"> * </span>
+              </label>
+              <div class="relative">
+                <input
+                  class="w-full text-sm text-[#1E2A5B] placeholder:text-[#D1D5DB] border border-[#E6E8F0] rounded-md py-3 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-[#3B33FF]"
+                  id="password"
+                  minlength="8"
+                  name="password"
+                  placeholder="Min. 8 characters"
+                  required=""
+                  type="password"
+                />
+                <button
+                  aria-label="Toggle password visibility"
+                  class="absolute inset-y-0 right-3 flex items-center text-[#8F9BB3] text-xs"
+                  type="button"
+                >
+                    <i id="passwordIcon" class="fas fa-eye"></i>
+                  </button>
+                </button>
+              </div>
+              <p id="passwordError" class="text-xs text-red-600 mt-1 hidden">
+                Password must be at least 8 characters long.
+              </p>
+            </div>
+            <button
+              class="w-full bg-[#3B33FF] text-white text-[10px] font-semibold py-2 rounded-md hover:bg-[#2a24cc] transition-colors"
+              type="submit"
+            >
+              Create Account
+            </button>
+            <p class="text-[12px] text-[#8F9BB3]"> <!-- Center "Already have an account?" text on mobile -->
+              Already have an account?
+              <a
+                class="font-semibold text-[#3B33FF] hover:underline"
+                href="sign-in.html"
+              >
+                Sign In
+              </a>
+            </p>
+          </form>
+        </div>
+      </div>
+      <!-- Right side (Image) -->
+      <!-- On mobile, image will be visible (flex) and take full width (w-full).
+           It will have rounded top-left and top-right corners.
+           On md screens and up, image will take half width (md:w-1/2) and revert to rounded bottom-left.
+           Added mt-8 for spacing on mobile, and md:mt-0 to remove it on desktop.
+      -->
+      <div
+        class="flex w-full md:w-1/2 relative overflow-hidden rounded-tl-[100px] rounded-tr-[100px] md:rounded-tl-none md:rounded-tr-none md:rounded-bl-[100px] mt-8 md:mt-0"
+      >
+        <img
+          alt="Blue and purple abstract gradient background with smooth curves"
+          class="object-cover w-full h-full"
+          height="800"
+          src="img/bg.png"
+          width="800"
+        />
+      </div>
+    </div>
+  </body>
+
+  <!-- Add this script before closing body tag -->
+  <script>
+    function showToast(message, type = "success") {
+      const toast = document.getElementById("toast");
+      const toastMessage = document.getElementById("toastMessage");
+      const icon = toast.querySelector(".fas");
+      const div = toast.querySelector("div");
+      const button = toast.querySelector("button");
+
+      // Set styles based on type
+      if (type === "success") {
+        div.className =
+          "flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50";
+        icon.className = "fas fa-check-circle";
+        button.className =
+          "ml-4 text-green-800 hover:text-green-900 rounded-lg p-1.5 inline-flex h-8 w-8";
+      } else if (type === "error") {
+        div.className =
+          "flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50";
+        icon.className = "fas fa-times-circle";
+        button.className =
+          "ml-4 text-red-800 hover:text-red-900 rounded-lg p-1.5 inline-flex h-8 w-8";
+      }
+
+      toastMessage.textContent = message;
+      toast.classList.remove("translate-x-full");
+
+      setTimeout(() => hideToast(), 3000);
+    }
+
+    function hideToast() {
+      document.getElementById("toast").classList.add("translate-x-full");
+    }
+
+    document
+      .querySelector('[aria-label="Toggle password visibility"]')
+      .addEventListener("click", () => {
+        const passwordInput = document.getElementById("password");
+        const passwordIcon = document.getElementById("passwordIcon");
+        const isPasswordVisible = passwordInput.type === "text";
+
+        // Toggle input type
+        passwordInput.type = isPasswordVisible ? "password" : "text";
+
+        // Change icon
+        passwordIcon.className = isPasswordVisible
+          ? "fas fa-eye"
+          : "fas fa-eye-slash";
+      });
+
+    document
+      .getElementById("registerForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const passwordError = document.getElementById("passwordError"); // Get the password error element
+
+        if (password.length < 8) {
+          passwordError.classList.remove("hidden");
+          return;
+        } else {
+          passwordError.classList.add("hidden");
+        }
+
+        try {
+          const response = await fetch(
+            "http://localhost:1337/api/auth/local/register",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username: name,
+                email: email,
+                password: password,
+              }),
+            }
+          );
+
+          const data = await response.json();
+
+          if (data.jwt) {
+            // Save token and user data
+            localStorage.setItem("jwt", data.jwt);
+            localStorage.setItem("user", JSON.stringify(data.user));
+            localStorage.setItem("userId", data.user.id);
+
+            // Show success message
+            showToast("Registration successful!");
+
+            // Redirect to sign-in page after a short delay
+            setTimeout(() => {
+              window.location.href = "sign-in.html";
+            }, 1500);
+          } else {
+            throw new Error(data.error.message);
+          }
+        } catch (error) {
+          showToast(error.message || "Registration failed", "error");
+        }
+      });
+  </script>
+
+  <!-- Add before closing body tag -->
+  <!-- Toast Container -->
+  <div
+    id="toast"
+    class="fixed top-4 right-4 z-50 transform transition-transform duration-300 ease-in-out translate-x-full"
+  >
+    <div class="flex items-center p-4 mb-4 rounded-lg shadow">
+      <div
+        class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg"
+      >
+        <i class="fas"></i>
+      </div>
+      <div class="ml-3 text-sm font-normal" id="toastMessage"></div>
+      <button
+        onclick="hideToast()"
+        class="ml-4 -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex h-8 w-8"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</html>

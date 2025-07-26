@@ -1,0 +1,726 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Smartbox Tables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Custom style for sidebar overlay */
+      .sidebar-overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 40; /* Lower than sidebar, higher than main content */
+      }
+
+      /* Custom CSS Variables for Smartbox Theme (Copied from Dashboard) */
+      :root {
+        --sb-primary: #4b3aff; /* Primary blue */
+        --sb-primary-light-bg: #e9f0ff; /* Light blue for active/icon backgrounds */
+        --sb-text-dark: #1e2a4a; /* Main dark text */
+        --sb-text-muted: #a3a9c1; /* Muted gray text */
+        --sb-bg: #f0f6ff; /* Body background */
+        --sb-card: #ffffff; /* Card background */
+        --sb-border: #f0f6ff; /* Border color */
+      }
+
+      /* Custom styles for sidebar navigation items (Copied from Dashboard) */
+      .sidebar-nav-item {
+        display: flex;
+        align-items: center; /* Ensures vertical alignment of children */
+        padding: 10px 16px; /* py-2.5 px-4 */
+        border-radius: 12px; /* rounded-xl */
+        transition: background-color 0.2s, color 0.2s;
+        color: var(--sb-text-muted); /* Default text color */
+        font-size: 1rem; /* text-base for the whole item */
+        font-weight: 400; /* font-normal */
+        position: relative; /* For active state border */
+        overflow: hidden; /* To contain border animation if any */
+      }
+      .sidebar-nav-item.active {
+        background-color: var(
+          --sb-primary-light-bg
+        ); /* Light blue background for active item */
+        color: var(--sb-text-dark); /* Darker text for active item */
+        font-weight: 600; /* Semibold for active item */
+      }
+      .sidebar-nav-item.active .sidebar-icon-wrapper {
+        background-color: var(
+          --sb-primary
+        ); /* Primary blue background for active icon wrapper */
+        color: white; /* White icon for active icon wrapper */
+      }
+      .sidebar-nav-item:not(.active):hover {
+        background-color: var(
+          --sb-primary-light-bg
+        ); /* Light blue on hover for inactive items */
+        color: var(--sb-text-dark); /* Darker text on hover */
+      }
+      .sidebar-nav-item:not(.active):hover .sidebar-icon-wrapper {
+        background-color: var(
+          --sb-primary
+        ); /* Primary blue on hover for inactive icon wrapper */
+        color: white; /* White icon on hover */
+      }
+      /* Icon wrapper styles */
+      .sidebar-icon-wrapper {
+        width: 32px; /* w-8 */
+        height: 32px; /* h-8 */
+        border-radius: 8px; /* rounded-lg */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-right: 12px; /* mr-3 */
+        background-color: transparent; /* Default transparent background */
+        color: var(--sb-text-muted); /* Default icon color */
+        transition: background-color 0.2s, color 0.2s;
+      }
+      /* Specific icon size */
+      .sidebar-icon {
+        font-size: 1.125rem; /* text-lg */
+      }
+      /* Active state left border */
+      .sidebar-nav-item.active::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background-color: var(--sb-primary); /* Primary blue border */
+      }
+
+      /* Sidebar specific styles */
+      .sidebar-logo-text-md {
+        color: var(--sb-text-dark);
+      }
+      .sidebar-logo-text-sm {
+        color: var(--sb-text-dark);
+      }
+      .sidebar-user-card {
+        background-color: var(
+          --sb-primary-light-bg
+        ); /* Light blue background */
+      }
+      .sidebar-user-avatar-bg {
+        background-color: var(
+          --sb-primary-light-bg
+        ); /* Light blue background */
+      }
+      .sidebar-user-avatar-text {
+        color: var(--sb-primary); /* Primary blue text */
+      }
+      .sidebar-user-name {
+        color: var(--sb-text-dark);
+      }
+      .sidebar-user-email {
+        color: var(--sb-text-muted);
+      }
+      .sidebar-logout-button {
+        background-color: var(
+          --sb-primary-light-bg
+        ); /* Light blue background */
+        color: var(--sb-text-muted); /* Muted text color */
+      }
+      .sidebar-logout-button:hover {
+        background-color: var(--sb-primary); /* Primary blue on hover */
+        color: white; /* White text on hover */
+      }
+      .sidebar-logout-button .fas {
+        color: var(--sb-text-muted); /* Muted icon color */
+      }
+      .sidebar-logout-button:hover .fas {
+        color: white; /* White icon on hover */
+      }
+      .sidebar-heading {
+        color: var(--sb-text-muted);
+      }
+
+      /* New styles for header and profile card avatars */
+      .header-avatar-bg {
+        background-color: var(--sb-primary); /* Primary blue for consistency */
+      }
+      .header-avatar-text {
+        color: white; /* White text for initials */
+        font-size: 0.875rem; /* text-sm */
+      }
+
+      .profile-avatar-bg {
+        background-color: var(--sb-primary); /* Primary blue for consistency */
+      }
+      .profile-avatar-text {
+        color: white;
+        font-size: 2.25rem; /* text-4xl for larger avatar */
+      }
+    </style>
+  </head>
+  <body class="bg-[#f0f6ff] text-[#1e2a4a] min-h-screen flex flex-col">
+    <!-- Overlay for mobile sidebar -->
+    <div
+      id="sidebarOverlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"
+      onclick="toggleSidebar()"
+    ></div>
+
+    <div class="flex flex-1 relative">
+      <!-- Sidebar (Copied from Dashboard) -->
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-[#f0f6ff] flex flex-col justify-between transition-all duration-300"
+      >
+        <!-- Logo and Brand - Desktop -->
+        <div class="px-6 py-4 hidden md:block">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 bg-[#4b3aff] rounded-xl flex items-center justify-center"
+            >
+              <span class="text-white font-bold text-xl">S</span>
+            </div>
+            <h1 class="text-xl font-semibold sidebar-logo-text-md">Smartbox</h1>
+          </div>
+        </div>
+
+        <!-- Mobile header and close button -->
+        <div
+          class="px-4 py-3 border-b border-[var(--sb-border)] flex items-center justify-between md:hidden"
+        >
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-8 h-8 bg-[#4b3aff] rounded-lg flex items-center justify-center"
+            >
+              <span class="text-white font-bold text-lg">S</span>
+            </div>
+            <h1 class="text-lg font-semibold sidebar-logo-text-sm">Smartbox</h1>
+          </div>
+          <button
+            id="close-sidebar"
+            class="p-2 rounded-lg text-[#1e2a4a] hover:bg-gray-100"
+            onclick="toggleSidebar()"
+          >
+            <i class="fas fa-times h-5 w-5"></i>
+          </button>
+        </div>
+
+        <!-- Navigation -->
+        <div class="px-4 py-2 flex-1 overflow-y-auto">
+          <!-- Main Menu -->
+          <div class="mb-6">
+            <span
+              class="px-3 text-xs font-medium sidebar-heading uppercase tracking-wider"
+              >Main Menu</span
+            >
+            <div class="mt-3 space-y-1">
+              <!-- Dashboard Item -->
+              <a href="dashboard.html" class="sidebar-nav-item">
+                <div class="sidebar-icon-wrapper">
+                  <i class="fas fa-home sidebar-icon"></i>
+                </div>
+                <span>Dashboard</span>
+              </a>
+              <!-- Profile Item (Active for this page) -->
+              <a href="profile.html" class="sidebar-nav-item active">
+                <div class="sidebar-icon-wrapper">
+                  <i class="fas fa-user sidebar-icon"></i>
+                </div>
+                <span>Profile</span>
+              </a>
+              <!-- Resi Checker Item -->
+              <a href="cekresi.html" class="sidebar-nav-item">
+                <div class="sidebar-icon-wrapper">
+                  <i class="fas fa-box-open sidebar-icon"></i>
+                </div>
+                <span>Resi Checker</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Profile (Copied from Dashboard) -->
+        <div class="mt-auto border-t border-[var(--sb-border)]">
+          <div class="p-3">
+            <div class="sidebar-user-card p-3 rounded-xl flex items-center">
+              <div class="relative flex-shrink-0">
+                <div
+                  class="w-10 h-10 sidebar-user-avatar-bg rounded-full flex items-center justify-center"
+                >
+                  <span
+                    class="sidebar-user-avatar-text font-medium"
+                    id="avatarInitials"
+                    >US</span
+                  >
+                </div>
+                <div
+                  class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"
+                ></div>
+              </div>
+              <div class="ml-3 min-w-0 flex-1">
+                <p
+                  class="text-sm font-medium truncate sidebar-user-name"
+                  id="sidebarUsername"
+                >
+                  User Name
+                </p>
+                <p
+                  class="text-xs truncate sidebar-user-email"
+                  id="sidebarUserEmail"
+                >
+                  user@example.com
+                </p>
+              </div>
+              <button
+                class="ml-auto sidebar-logout-button p-1.5 rounded-lg"
+                onclick="signOut()"
+              >
+                <i class="fas fa-sign-out-alt h-5 w-5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content with offset for sidebar -->
+      <main class="flex-1 w-full p-4 sm:p-8 md:p-8 transition-all duration-300">
+        <!-- Header (Copied from Dashboard) -->
+        <div class="flex items-center justify-between mb-6">
+          <!-- Hamburger menu for mobile -->
+          <button
+            id="sidebarToggle"
+            class="md:hidden text-[#1e2a4a] text-2xl mr-4"
+            onclick="toggleSidebar()"
+            aria-label="Toggle sidebar"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <!-- Title block -->
+          <div class="flex-shrink-0">
+            <p class="text-xs text-[#a3a9c1] mb-1">Pages / Profile</p>
+            <h2 class="text-2xl font-semibold text-[#1e2a4a]">Profile</h2>
+          </div>
+          <!-- Search bar and avatar container -->
+          <div
+            class="flex items-center bg-white rounded-full px-4 py-2 shadow-md ml-4 flex-1 min-w-0 max-w-[200px] sm:max-w-[250px] md:max-w-sm"
+          >
+            <div class="flex items-center space-x-2 flex-1">
+              <i class="fas fa-search text-[#a3a9c1]"> </i>
+              <input
+                class="outline-none text-sm text-[#1e2a4a] placeholder-[#a3a9c1] bg-transparent w-full"
+                placeholder="Search"
+                type="text"
+              />
+            </div>
+            <!-- Avatar button and dropdown -->
+            <div class="relative ml-3 flex-shrink-0">
+              <button
+                id="avatarButton"
+                class="relative"
+                onclick="toggleDropdown()"
+              >
+                <div
+                  class="w-10 h-10 rounded-full flex items-center justify-center header-avatar-bg"
+                >
+                  <span
+                    class="font-medium header-avatar-text"
+                    id="headerAvatarInitials"
+                    >US</span
+                  >
+                </div>
+              </button>
+              <!-- Dropdown menu -->
+              <div
+                id="avatarDropdown"
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 transform origin-top-right transition-all duration-200 ease-out opacity-0 scale-95"
+              >
+                <div class="px-4 py-2">
+                  <p class="text-sm text-[#1e2a4a] font-bold" id="userGreeting">
+                    Hi, <span id="dropdownUsername">User</span>!
+                  </p>
+                </div>
+                <div class="border-t border-gray-100 my-1"></div>
+                <a
+                  href="profile.html"
+                  class="flex items-center px-4 py-2 text-sm text-[#1e2a4a] hover:bg-[#f0f6ff]"
+                >
+                  <i class="fas fa-user mr-2"></i>
+                  Profile
+                </a>
+                <button
+                  onclick="signOut()"
+                  class="flex items-center w-full px-4 py-2 text-sm text-[#f72323] hover:bg-[#f0f6ff]"
+                >
+                  <i class="fas fa-sign-out-alt mr-2"></i>
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-[#f0f3ff] flex justify-center">
+          <!-- Adjusted grid for mobile to stack cards vertically -->
+          <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left card -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm">
+              <div class="relative">
+                <img
+                  alt="Abstract blue and purple gradient background with smooth shapes"
+                  class="w-full h-36 object-cover"
+                  height="200"
+                  src="https://storage.googleapis.com/a1aa/image/38566d66-ddb3-4599-958a-28469bc4eefb.jpg"
+                  width="600"
+                />
+                <div
+                  class="absolute -bottom-12 left-6 w-24 h-24 rounded-full border-4 border-white overflow-hidden flex items-center justify-center profile-avatar-bg"
+                >
+                  <span
+                    class="font-bold profile-avatar-text"
+                    id="profileCardAvatarInitials"
+                    >US</span
+                  >
+                </div>
+              </div>
+              <div class="pt-16 pb-6 px-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h2
+                      class="text-gray-900 font-semibold text-lg leading-tight"
+                      id="profileUsername"
+                    >
+                      <!-- Username will be inserted here -->
+                    </h2>
+                    <p
+                      class="text-gray-400 text-xs leading-tight"
+                      id="profileUserId"
+                    >
+                      Owner Id:
+                      <!-- User ID will be inserted here -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Right card -->
+            <!-- New Right Card for Username Update -->
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <h3 class="text-gray-900 font-semibold text-sm mb-4">
+                Update Username
+              </h3>
+              <form
+                id="usernameForm"
+                class="space-y-4"
+                onsubmit="updateUsername(event)"
+              >
+                <div>
+                  <label
+                    class="block text-gray-500 text-xs mb-1 font-semibold"
+                    for="usernameInput"
+                  >
+                    Username
+                  </label>
+                  <input
+                    class="w-full text-[14px] text-[#1e2a4a] placeholder-gray-300 border border-gray-200 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600"
+                    id="usernameInput"
+                    name="username"
+                    placeholder="Enter new username"
+                    type="text"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="bg-indigo-700 text-white text-xs font-semibold px-5 py-2 rounded hover:bg-indigo-800 transition"
+                >
+                  Update Username
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div
+          id="toast"
+          class="fixed top-4 right-4 z-50 transform transition-transform duration-300 ease-in-out translate-x-full"
+        >
+          <div class="flex items-center p-4 mb-4 rounded-lg shadow">
+            <div
+              class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg"
+            >
+              <i class="fas"></i>
+            </div>
+            <div class="ml-3 text-sm font-normal" id="toastMessage"></div>
+            <button
+              onclick="hideToast()"
+              class="ml-4 -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex h-8 w-8"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      // Function to toggle dropdown menu
+      function toggleDropdown() {
+        const dropdown = document.getElementById("avatarDropdown");
+
+        if (dropdown.classList.contains("hidden")) {
+          // Show dropdown with animation
+          dropdown.classList.remove("hidden");
+          setTimeout(() => {
+            dropdown.classList.remove("opacity-0", "scale-95");
+            dropdown.classList.add("opacity-100", "scale-100");
+          }, 10);
+        } else {
+          // Hide dropdown with animation
+          dropdown.classList.remove("opacity-100", "scale-100");
+          dropdown.classList.add("opacity-0", "scale-95");
+          setTimeout(() => {
+            dropdown.classList.add("hidden");
+          }, 200);
+        }
+      }
+
+      // Function to sign out
+      function signOut() {
+        localStorage.removeItem("jwt");
+        localStorage.removeItem("user");
+        window.location.href = "sign-in.html";
+      }
+
+      // Add this to your existing script or create a new one
+      document.addEventListener("DOMContentLoaded", function () {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+          // Update profile username
+          document.getElementById("profileUsername").textContent =
+            user.username;
+          // Update profile user ID
+          document.getElementById(
+            "profileUserId"
+          ).textContent = `Owner Id: ${user.id}`;
+          // Update username in dropdown greeting
+          document.getElementById("dropdownUsername").textContent =
+            user.username;
+          // Set the initial value of the username input field
+          document.getElementById("usernameInput").value = user.username;
+
+          // Update sidebar user info
+          document.getElementById("sidebarUsername").textContent =
+            user.username;
+          document.getElementById("sidebarUserEmail").textContent = user.email;
+          document.getElementById("avatarInitials").textContent = user.username
+            .substring(0, 2)
+            .toUpperCase();
+
+          // NEW: Update header avatar initials
+          document.getElementById("headerAvatarInitials").textContent =
+            user.username.substring(0, 2).toUpperCase();
+
+          // NEW: Update main profile card avatar initials
+          document.getElementById("profileCardAvatarInitials").textContent =
+            user.username.substring(0, 2).toUpperCase();
+        } else {
+          // Redirect to login if no user data found
+          window.location.href = "sign-in.html";
+        }
+
+        // Initialize sidebar and main content state
+        setSidebarAndMainContentState();
+      });
+
+      // Add these functions to your script section
+
+      function showToast(message, type = "success") {
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toastMessage");
+        const icon = toast.querySelector(".fas");
+        const div = toast.querySelector("div");
+        const button = toast.querySelector("button");
+
+        // Set styles based on type
+        if (type === "success") {
+          div.className =
+            "flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50";
+          icon.className = "fas fa-check-circle";
+          button.className =
+            "ml-4 text-green-800 hover:text-green-900 rounded-lg p-1.5 inline-flex h-8 w-8";
+        } else if (type === "error") {
+          div.className =
+            "flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50";
+          icon.className = "fas fa-times-circle";
+          button.className =
+            "ml-4 text-red-800 hover:text-red-900 rounded-lg p-1.5 inline-flex h-8 w-8";
+        } else if (type === "warning") {
+          div.className =
+            "flex items-center p-4 mb-4 text-yellow-800 rounded-lg bg-yellow-50";
+          icon.className = "fas fa-exclamation-circle";
+          button.className =
+            "ml-4 text-yellow-800 hover:text-yellow-900 rounded-lg p-1.5 inline-flex h-8 w-8";
+        }
+
+        toastMessage.textContent = message;
+        toast.classList.remove("translate-x-full");
+
+        setTimeout(() => hideToast(), 3000);
+      }
+
+      function hideToast() {
+        document.getElementById("toast").classList.add("translate-x-full");
+      }
+
+      function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const eyeIcon = document.querySelector(".fa-eye");
+
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          eyeIcon.classList.remove("fa-eye");
+          eyeIcon.classList.add("fa-eye-slash");
+        } else {
+          passwordInput.type = "password";
+          eyeIcon.classList.remove("fa-eye-slash");
+          eyeIcon.classList.add("fa-eye");
+        }
+      }
+
+      // Initial check for JWT on page load
+      if (!localStorage.getItem("jwt")) {
+        showToast("You are not authorized. Please log in.", "error");
+        window.location.href = "sign-in.html"; // Redirect to login page
+      }
+
+      // --- New function for updating username ---
+      async function updateUsername(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const usernameInput = document.getElementById("usernameInput");
+        const newUsername = usernameInput.value.trim();
+
+        // Check if the username field is empty
+        if (!newUsername) {
+          showToast("Username cannot be empty.", "warning"); // Show toast notification
+          return;
+        }
+
+        const jwt = localStorage.getItem("jwt");
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!jwt || !user || !user.id) {
+          showToast("Authentication error. Please log in again.", "error");
+          signOut(); // Redirect to sign-in
+          return;
+        }
+
+        const userId = user.id;
+        const apiUrl = `http://localhost:1337/api/users/${userId}`; // Replace with your Strapi URL
+
+        try {
+          const response = await fetch(apiUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+            body: JSON.stringify({ username: newUsername }),
+          });
+
+          if (response.ok) {
+            const updatedUser = await response.json();
+            // Update localStorage with the new username
+            const updatedUserData = { ...user, username: updatedUser.username };
+            localStorage.setItem("user", JSON.stringify(updatedUserData));
+
+            // Update UI elements
+            document.getElementById("profileUsername").textContent =
+              updatedUser.username;
+            document.getElementById("dropdownUsername").textContent =
+              updatedUser.username;
+            usernameInput.value = updatedUser.username; // Keep the input field updated
+
+            // Update sidebar username
+            document.getElementById("sidebarUsername").textContent =
+              updatedUser.username;
+            // Update header avatar initials
+            document.getElementById("headerAvatarInitials").textContent =
+              updatedUser.username.substring(0, 2).toUpperCase();
+            // Update main profile card avatar initials
+            document.getElementById("profileCardAvatarInitials").textContent =
+              updatedUser.username.substring(0, 2).toUpperCase();
+
+            showToast("Username updated successfully!", "success");
+          } else {
+            const errorData = await response.json();
+            console.error("Failed to update username:", errorData);
+            showToast(
+              `Failed to update username: ${
+                errorData.message || "Unknown error"
+              }`,
+              "error"
+            );
+          }
+        } catch (error) {
+          console.error("Error updating username:", error);
+          showToast(
+            "An error occurred while updating username. Please try again.",
+            "error"
+          );
+        }
+      }
+
+      // Function to set sidebar and main content state based on screen width
+      function setSidebarAndMainContentState() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.querySelector("main");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        if (window.innerWidth >= 768) {
+          // md breakpoint
+          sidebar.classList.remove("-translate-x-full"); // Ensure sidebar is visible on desktop
+          mainContent.classList.remove("ml-0");
+          mainContent.classList.add("ml-64"); // Push main content for desktop
+          sidebarOverlay.classList.add("hidden"); // Hide overlay on desktop
+        } else {
+          sidebar.classList.add("-translate-x-full"); // Ensure sidebar is hidden on mobile
+          mainContent.classList.remove("ml-64");
+          mainContent.classList.add("ml-0"); // Reset main content margin for mobile
+          sidebarOverlay.classList.add("hidden"); // Hide overlay on mobile
+        }
+      }
+
+      // Sidebar toggle functionality
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.querySelector("main");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        if (sidebar.classList.contains("-translate-x-full")) {
+          // Show sidebar
+          sidebar.classList.remove("-translate-x-full");
+          mainContent.classList.remove("ml-0");
+          mainContent.classList.add("ml-64"); // Push main content
+          sidebarOverlay.classList.remove("hidden"); // Show overlay
+        } else {
+          // Hide sidebar
+          sidebar.classList.add("-translate-x-full");
+          mainContent.classList.remove("ml-64");
+          mainContent.classList.add("ml-0"); // Reset main content margin
+          sidebarOverlay.classList.add("hidden"); // Hide overlay
+        }
+      }
+
+      // Adjust main content margin on window resize to handle responsiveness
+      window.addEventListener("resize", setSidebarAndMainContentState);
+    </script>
+  </body>
+</html>

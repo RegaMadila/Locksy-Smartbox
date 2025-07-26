@@ -1,0 +1,419 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Smartbox Tables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Scrollbar for table horizontally */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body class="bg-[#f0f4ff] text-[#1a254f] min-h-screen flex">
+    <!-- Sidebar -->
+    <aside
+      class="flex flex-col justify-between bg-white w-20 md:w-56 border-r border-[#e6e9f0] relative"
+    >
+      <div>
+        <div class="px-5 py-6 flex justify-center items-center">
+          <span
+            class="font-semibold text-[#1a254f] text-lg md:text-xl block md:inline-block"
+          >
+            LOCKSY
+          </span>
+        </div>
+        <nav class="flex flex-col space-y-2 md:space-y-4 px-2 md:px-5 mt-[70px]">
+          <a
+            class="flex items-center space-x-3 md:space-x-4 text-[#3b3f5c] font-semibold md:text-sm text-xs md:leading-5 leading-4"
+            href="#"
+          >
+            <i class="fas fa-home text-[#4f46e5] text-base md:text-lg"> </i>
+            <span class="hidden md:inline"> Dashboard </span>
+          </a>
+          <a
+            class="flex items-center space-x-3 md:space-x-4 text-[#a3a8c0] font-normal md:text-sm text-xs md:leading-5 leading-4"
+            "
+          >
+            <i class="fas fa-user text-[#a3a8c0] text-base md:text-lg"
+            href="profile.html"> </i>
+            <span class="hidden md:inline" > Profile </span>
+          </
+        </nav>
+      </div>
+      </div>
+      <div
+        class="px-5 py-4 text-[10px] md:text-xs text-[#a3a8c0] text-center select-none"
+      >
+      </div>
+    </aside>
+    <!-- Main content -->
+    <main class="flex-1 p-8">
+      <!-- Breadcrumb and Title -->
+      <div class="mb-6">
+        <p class="text-xs text-[#a3a8c0] mb-1">Pages / Tables</p>
+        <div class="flex justify-between items-end">
+          <h1 class="text-[#1a254f] font-semibold text-xl md:text-2xl">
+            Hello User!!
+          </h1>
+          <div
+            class="flex items-center justify-end space-x-4 bg-white rounded-full px-2 py-2 max-w-md shadow-sm"
+          >
+            <div
+              class="flex items-center flex-1 max-w-xs bg-[#f0f4ff] rounded-full px-3 py-1"
+            >
+              <i class="fas fa-search text-[#a3a8c0] text-sm mr-2"> </i>
+              <input
+                aria-label="Search"
+                class="bg-transparent text-xs md:text-sm placeholder-[#a3a8c0] focus:outline-none w-full"
+                placeholder="Search"
+                type="search"
+              />
+            </div>
+            <button
+              aria-label="Notifications"
+              class="text-[#a3a8c0] hover:text-[#4f46e5] text-lg"
+            >
+              <i class="fas fa-bell"> </i>
+            </button>
+            <button
+              aria-label="Toggle dark mode"
+              class="text-[#a3a8c0] hover:text-[#4f46e5] text-lg"
+            >
+              <i class="fas fa-moon"> </i>
+            </button>
+            <button
+              aria-label="Information"
+              class="text-[#a3a8c0] hover:text-[#4f46e5] text-lg"
+            >
+              <i class="fas fa-info-circle"> </i>
+            </button>
+            <img
+              alt="User avatar"
+              class="w-8 h-8 rounded-full"
+              height="32"
+              src="https://storage.googleapis.com/a1aa/image/7a3a7a3a-7a3a-7a3a-7a3a-7a3a7a3a7a3a.jpg"
+              width="32"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- Stats cards with equal width and responsive -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+        <div
+          class="flex items-center space-x-3 bg-white rounded-xl px-4 py-3 shadow-sm w-full"
+        >
+          <div class="bg-[#e6e9f0] rounded-full p-2">
+            <i class="fas fa-chart-bar text-[#4f46e5] text-lg"> </i>
+          </div>
+          <div>
+            <p class="text-[10px] text-[#a3a8c0]">Incoming Packages</p>
+            <p class="text-sm font-semibold text-[#1a254f]">2</p>
+          </div>
+        </div>
+        <div
+          class="flex items-center space-x-3 bg-white rounded-xl px-4 py-3 shadow-sm w-full"
+        >
+          <div class="bg-[#e6e9f0] rounded-full p-2">
+            <i class="fas fa-dollar-sign text-[#4f46e5] text-lg"> </i>
+          </div>
+          <div>
+            <p class="text-[10px] text-[#a3a8c0]">Total Packages</p>
+            <p class="text-sm font-semibold text-[#1a254f]">97</p>
+          </div>
+        </div>
+        <div
+          class="flex flex-col bg-white rounded-xl px-4 py-3 shadow-sm w-full"
+        >
+          <p class="text-[10px] text-[#a3a8c0]">Sales</p>
+          <p class="text-sm font-semibold text-[#1a254f]">$574.34</p>
+          <p class="text-[10px] text-[#22c55e] font-semibold">
+            +23%
+            <span class="font-normal text-[#a3a8c0]"> since last month </span>
+          </p>
+        </div>
+        <div
+          class="flex items-center space-x-3 bg-white rounded-xl px-4 py-3 shadow-sm w-full"
+        >
+          <div>
+            <p class="text-[10px] text-[#a3a8c0]">Your balance</p>
+            <p class="text-sm font-semibold text-[#1a254f]">$1,000</p>
+          </div>
+          <img
+            alt="Flag of United States"
+            class="w-8 h-8 rounded-full"
+            height="32"
+            src="https://storage.googleapis.com/a1aa/image/39c23513-606d-474b-5109-ebdb92e2973e.jpg"
+            width="32"
+          />
+        </div>
+        <div
+          class="flex items-center space-x-3 bg-white rounded-xl px-4 py-3 shadow-sm w-full"
+        >
+          <div class="bg-[#e6f0ff] rounded-full p-2">
+            <i class="fas fa-check-circle text-[#4f46e5] text-lg"> </i>
+          </div>
+          <div>
+            <p class="text-[10px] text-[#a3a8c0]">New Tasks</p>
+            <p class="text-sm font-semibold text-[#1a254f]">154</p>
+          </div>
+        </div>
+        
+        </div>
+      </div>
+      <!-- Complex Table -->
+      <section class="bg-white rounded-xl shadow-sm p-6 overflow-x-auto scrollbar-hide">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-[#1a254f] font-semibold text-base md:text-lg">
+            Your Packages
+          </h2>
+          <button
+            aria-label="More options"
+            class="text-[#a3a8c0] hover:text-[#4f46e5]"
+          >
+            <i class="fas fa-ellipsis-h"> </i>
+          </button>
+        </div>
+        <table class="w-full min-w-[600px] text-left text-xs md:text-sm text-[#a3a8c0]">
+          <thead>
+            <tr>
+              <th class="pb-2 font-normal">PACKAGE NAME</th>
+              <th class="pb-2 font-normal">RESI</th>
+              <th class="pb-2 font-normal w-40">STATUS</th>
+              <th class="pb-2 font-normal w-24">PHOTO</th>
+              <th class="pb-2 font-normal w-24">ACTION</th>
+            </tr>
+          </thead>
+          <tbody class="text-[#1a254f] font-normal">
+            <tr class="border-t border-[#e6e9f0]">
+              <td class="py-3 font-semibold">Marketplace</td>
+              <td class="py-3 font-mono text-xs md:text-sm">12345–12345</td>
+              <td
+                class="py-3 flex items-center space-x-2 text-[#22c55e] font-semibold"
+              >
+                <i class="fas fa-check-circle"> </i>
+                <span> Approved </span>
+              </td>
+              <td class="py-3">
+                <img
+                  alt="Black and white icon representing a photo"
+                  class="w-6 h-6"
+                  height="24"
+                  src="https://storage.googleapis.com/a1aa/image/bb20af2f-cda0-4ef3-dc13-4114c39033ca.jpg"
+                  width="24"
+                />
+              </td>
+              <td class="py-3 flex space-x-3 text-[#1a254f] text-sm">
+                <button
+                  aria-label="Edit Marketplace package"
+                  class="hover:text-[#4f46e5]"
+                >
+                  <i class="fas fa-pencil-alt"> </i>
+                </button>
+                <button
+                  aria-label="Delete Marketplace package"
+                  class="hover:text-[#4f46e5]"
+                >
+                  <i class="fas fa-trash"> </i>
+                </button>
+              </td>
+            </tr>
+            <tr class="border-t border-[#e6e9f0]">
+              <td class="py-3 font-semibold">Venus Dashboard Builder</td>
+              <td class="py-3 font-mono text-xs md:text-sm">12345–12345</td>
+              <td
+                class="py-3 flex items-center space-x-2 text-[#ef4444] font-semibold"
+              >
+                <i class="fas fa-times-circle"> </i>
+                <span> Disable </span>
+              </td>
+              <td class="py-3">
+                <img
+                  alt="Black and white icon representing a photo"
+                  class="w-6 h-6"
+                  height="24"
+                  src="https://storage.googleapis.com/a1aa/image/bb20af2f-cda0-4ef3-dc13-4114c39033ca.jpg"
+                  width="24"
+                />
+              </td>
+              <td class="py-3 flex space-x-3 text-[#1a254f] text-sm">
+                <button
+                  aria-label="Edit Venus Dashboard Builder package"
+                  class="hover:text-[#4f46e5]"
+                >
+                  <i class="fas fa-pencil-alt"> </i>
+                </button>
+                <button
+                  aria-label="Delete Venus Dashboard Builder package"
+                  class="hover:text-[#4f46e5]"
+                >
+                  <i class="fas fa-trash"> </i>
+                </button>
+              </td>
+            </tr>
+            <tr class="border-t border-[#e6e9f0]">
+              <td class="py-3 font-semibold">Venus Design System</td>
+              <td class="py-3 font-mono text-xs md:text-sm">12345–12345</td>
+              <td
+                class="py-3 flex items-center space-x-2 text-[#fbbf24] font-semibold"
+              >
+                <i class="fas fa-exclamation-circle"> </i>
+                <span> Error </span>
+              </td>
+              <td class="py-3">
+                <img
+                  alt="Black and white icon representing a photo"
+                  class="w-6 h-6"
+                  height="24"
+                  src="https://storage.googleapis.com/a1aa/image/bb20af2f-cda0-4ef3-dc13-4114c39033ca.jpg"
+                  width="24"
+                />
+              </td>
+              <td class="py-3 flex space-x-3 text-[#1a254f] text-sm">
+                <button
+                  aria-label="Edit Venus Design System package"
+                  class="hover:text-[#4f46e5]"
+                >
+                  <i class="fas fa-pencil-alt"> </i>
+                </button>
+                <button
+                  aria-label="Delete Venus Design System package"
+                  class="hover:text-[#4f46e5]"
+                >
+                  <i class="fas fa-trash"> </i>
+                </button>
+              </td>
+            </tr>
+            <tr class="border-t border-b border-[#e6e9f0]">
+              <td class="py-3 font-semibold">Uranus</td>
+              <td class="py-3 font-mono text-xs md:text-sm">12345–12345</td>
+              <td
+                class="py-3 flex items-center space-x-2 text-[#22c55e] font-semibold"
+              >
+                <i class="fas fa-check-circle"> </i>
+                <span> Approved </span>
+              </td>
+              <td class="py-3">
+                <img
+                  alt="Black and white icon representing a photo"
+                  class="w-6 h-6"
+                  height="24"
+                  src="https://storage.googleapis.com/a1aa/image/bb20af2f-cda0-4ef3-dc13-4114c39033ca.jpg"
+                  width="24"
+                />
+              </td>
+              <td class="py-3 flex space-x-3 text-[#1a254f] text-sm">
+                <button
+                  aria-label="Edit Uranus package"
+                  class="hover:text-[#4f46e5]"
+                >
+                  <i class="fas fa-pencil-alt"> </i>
+                </button>
+                <button
+                  aria-label="Delete Uranus package"
+                  class="hover:text-[#4f46e5]"
+                >
+                  <i class="fas fa-trash"> </i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      
+      <script>
+        const apiUrl = "http://185.201.8.172:1337/api/smartboxes?populate=*";
+        const baseUrl = "http://185.201.8.172:1337/api/smartboxes";
+        const userId = localStorage.getItem("userId");
+
+        if (!userId) {
+          window.location.href = 'sign-in.html';
+        }
+
+        async function fetchPackages() {
+          try {
+            const response = await fetch(`${apiUrl}&filters[owner][id][$eq]=${userId}`);
+            const data = await response.json();
+            
+            const tbody = document.querySelector('tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            data.data.forEach(item => {
+              const row = `
+                <tr class="border-t border-[#e6e9f0]">
+                  <td class="py-3 font-semibold">${item.nama_barang || '-'}</td>
+                  <td class="py-3 font-mono text-xs md:text-sm">${item.resi || '-'}</td>
+                  <td class="py-3 w-40">
+                    <div class="flex items-center space-x-2 ${getStatusColor(item.status_penerimaan)} font-semibold">
+                      <i class="${getStatusIcon(item.status_penerimaan)}"> </i>
+                      <span>${item.status_penerimaan ? 'Sudah diterima' : 'Belum diterima'}</span>
+                    </div>
+                  </td>
+                  <td class="py-3 w-24">
+                    <img alt="Package photo" class="w-6 h-6" height="24" src="${item.foto?.url ? 'http://185.201.8.172:1337' + item.foto.url : 'https://storage.googleapis.com/a1aa/image/bb20af2f-cda0-4ef3-dc13-4114c39033ca.jpg'}" width="24"/>
+                  </td>
+                  <td class="py-3 w-24">
+                    <div class="flex space-x-3 text-[#1a254f] text-sm">
+                      <button class="hover:text-[#4f46e5]" onclick="editData('${item.id}', '${item.nama_barang}', '${item.resi}', ${item.status_penerimaan})">
+                        <i class="fas fa-pencil-alt"> </i>
+                      </button>
+                      <button class="hover:text-[#4f46e5]" onclick="hapusData('${item.id}')">
+                        <i class="fas fa-trash"> </i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+              tbody.innerHTML += row;
+            });
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        }
+
+        // Helper function to get status color
+        function getStatusColor(status) {
+          return status ? 'text-[#22c55e]' : 'text-[#fbbf24]';
+        }
+
+        // Helper function to get status icon
+        function getStatusIcon(status) {
+          return status ? 'fas fa-check-circle' : 'fas fa-clock';
+        }
+
+        // Delete function
+        async function hapusData(id) {
+          if (confirm("❗ Apakah Anda yakin ingin menghapus data ini?")) {
+            try {
+              await fetch(`${baseUrl}/${id}`, {
+                method: "DELETE"
+              });
+              alert("✅ Data berhasil dihapus!");
+              location.reload();
+            } catch (error) {
+              console.error("❌ Error:", error);
+            }
+          }
+        }
+
+        // Load data when page loads
+        fetchPackages();
+      </script>
+  </body>
+</html>

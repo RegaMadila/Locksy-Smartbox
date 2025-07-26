@@ -1,0 +1,1039 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Smartbox Tables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Custom style for sidebar overlay */
+      .sidebar-overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 40; /* Lower than sidebar, higher than main content */
+      }
+      /* Custom styles for sidebar navigation items */
+      .sidebar-nav-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px; /* py-3 px-4 */
+        border-radius: 12px; /* rounded-xl */
+        transition: background-color 0.2s, color 0.2s;
+        color: #a3a9c1; /* Default text color */
+      }
+      .sidebar-nav-item.active {
+        background-color: #3f3fff; /* Light blue background for active item */
+        color: #ffffff; /* Darker text for active item */
+        font-weight: 600; /* Semibold for active item */
+      }
+      .sidebar-nav-item.active .sidebar-icon {
+        color: #ffffff; /* Darker icon for active item */
+      }
+      .sidebar-nav-item:not(.active):hover {
+        background-color: #e9f0ff; /* Lighter blue on hover for inactive items */
+        color: #1e2a4a; /* Darker text on hover */
+      }
+      .sidebar-nav-item:not(.active):hover .sidebar-icon {
+        color: #1e2a4a; /* Darker icon on hover */
+      }
+      .sidebar-nav-item .sidebar-icon {
+        margin-right: 12px; /* mr-3 */
+        font-size: 1.125rem; /* text-lg */
+        color: #a3a9c1; /* Default icon color */
+        vertical-align: middle; /* Added for better vertical alignment */
+        display: inline-block; /* Ensures vertical-align works as expected */
+      }
+      .sidebar-nav-item span {
+        line-height: 1; /* Ensures consistent line height for text */
+      }
+    </style>
+  </head>
+  <body class="bg-[#f0f6ff] text-[#1e2a4a] min-h-screen flex flex-col">
+    <!-- Overlay for mobile sidebar -->
+    <div
+      id="sidebarOverlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"
+      onclick="toggleSidebar()"
+    ></div>
+
+    <div class="flex flex-1 relative">
+      <!-- Sidebar -->
+      <!-- Initial transform classes will be set by JavaScript on load -->
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-[#f0f6ff] flex flex-col justify-between transition-all duration-300"
+      >
+        <div>
+          <!-- Update padding pada div logo -->
+          <div class="p-4 md:p-14">
+            <!-- Ubah padding dan tambah margin bottom -->
+            <h1
+              class="font-extrabold text-center text-2xl text-[#1e2a4a] hidden md:block"
+            >
+              LOCKSY
+            </h1>
+            <h1
+              class="font-extrabold text-2xl text-[#1e2a4a] md:hidden text-center"
+            >
+              S
+            </h1>
+          </div>
+          <nav class="flex flex-col space-y-2 px-4 md:px-4">
+            <!-- Dashboard Item -->
+            <a class="sidebar-nav-item active" href="dashboard.html">
+              <i class="fas fa-home sidebar-icon"></i>
+              <span class="hidden md:inline">Dashboard</span>
+            </a>
+
+            <!-- Profile Item (Existing) -->
+            <a class="sidebar-nav-item" href="profile.html">
+              <i class="fas fa-user sidebar-icon"></i>
+              <span class="hidden md:inline">Profile</span>
+            </a>
+            <!-- Resi Checker Item (Existing) -->
+            <a class="sidebar-nav-item" href="cekresi.html">
+              <i class="fas fa-box-open sidebar-icon"></i>
+              <span class="hidden md:inline">Resi Checker</span>
+            </a>
+          </nav>
+        </div>
+        <div class="mb-8 px-4 md:px-8 hidden md:block">
+          <div
+            class="relative w-48 h-36 rounded-2xl bg-gradient-to-tr from-[#5a4fff] to-[#3f3fff] mx-auto"
+          >
+            <div
+              class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full border-4 border-white bg-gradient-to-tr from-[#5a4fff] to-[#3f3fff] flex items-center justify-center"
+            >
+              <i class="fas fa-circle-notch text-white text-2xl"></i>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content with offset for sidebar -->
+      <!-- Initial ml classes will be set by JavaScript on load -->
+      <main class="flex-1 p-4 sm:p-8 md:p-8 transition-all duration-300">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+          <!-- Hamburger menu for mobile -->
+          <button
+            id="sidebarToggle"
+            class="md:hidden text-[#1e2a4a] text-2xl mr-4"
+            onclick="toggleSidebar()"
+            aria-label="Toggle sidebar"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="flex-1">
+            <p class="text-xs text-[#a3a9c1] mb-1">Pages / Tables</p>
+            <h2 class="text-2xl font-semibold text-[#1e2a4a]">Tables</h2>
+          </div>
+          <div
+            class="flex items-center space-x-3 bg-white rounded-full px-4 py-2 shadow-md max-w-md w-full md:w-auto"
+          >
+            <div class="flex items-center space-x-2 flex-1">
+              <i class="fas fa-search text-[#a3a9c1]"> </i>
+              <input
+                class="outline-none text-sm text-[#a3a9c1] placeholder-[#a3a9c1] bg-transparent w-full"
+                placeholder="Search"
+                type="text"
+              />
+            </div>
+            <button
+              aria-label="Notifications"
+              class="text-[#a3a9c1] hover:text-[#4b3aff] transition hidden sm:block"
+            >
+              <i class="fas fa-bell"> </i>
+            </button>
+            <button
+              aria-label="Toggle dark mode"
+              class="text-[#a3a9c1] hover:text-[#4b3aff] transition hidden sm:block"
+            >
+              <i class="fas fa-moon"> </i>
+            </button>
+            <button
+              aria-label="Information"
+              class="text-[#a3a9c1] hover:text-[#4b3aff] transition hidden sm:block"
+            >
+              <i class="fas fa-info-circle"> </i>
+            </button>
+            <div class="relative">
+              <button
+                id="avatarButton"
+                class="relative"
+                onclick="toggleDropdown()"
+              >
+                <img
+                  alt="User avatar"
+                  class="w-10 h-10 rounded-full object-cover"
+                  src="https://storage.googleapis.com/a1aa/image/2fa82e49-a95b-4590-e708-2ba1c6dd7b68.jpg"
+                />
+              </button>
+              <!-- Dropdown menu -->
+              <div
+                id="avatarDropdown"
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 transform origin-top-right transition-all duration-200 ease-out opacity-0 scale-95"
+              >
+                <div class="px-4 py-2">
+                  <p class="text-sm text-[#1e2a4a] font-bold" id="userGreeting">
+                    Hi, <span id="username">User</span>!
+                  </p>
+                </div>
+                <div class="border-t border-gray-100 my-1"></div>
+                <a
+                  href="profile.html"
+                  class="flex items-center px-4 py-2 text-sm text-[#1e2a4a] hover:bg-[#f0f6ff]"
+                >
+                  <i class="fas fa-user mr-2"></i>
+                  Profile
+                </a>
+                <button
+                  onclick="signOut()"
+                  class="flex items-center w-full px-4 py-2 text-sm text-[#f72323] hover:bg-[#f0f6ff]"
+                >
+                  <i class="fas fa-sign-out-alt mr-2"></i>
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Stats cards -->
+        <!-- Changed grid-cols-1 to grid-cols-2 for mobile to make cards more square -->
+        <div
+          class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6"
+        >
+          <div
+            class="bg-white rounded-xl p-4 flex items-center space-x-4 shadow-sm"
+          >
+            <div
+              class="bg-[#e9f0ff] rounded-full w-12 h-12 flex items-center justify-center text-[#4b3aff]"
+            >
+              <i class="fa-solid fa-truck-fast text-lg"> </i>
+            </div>
+            <div>
+              <p class="text-xs text-[#a3a9c1] mb-1">Incoming Packages</p>
+              <p
+                class="font-semibold text-sm text-[#1e2a4a] incoming-packages-count"
+              >
+                0
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-xl p-4 flex items-center space-x-4 shadow-sm"
+          >
+            <div
+              class="bg-[#e9f0ff] rounded-full w-12 h-12 flex items-center justify-center text-[#4b3aff]"
+            >
+              <i class="fas fa-box text-lg"> </i>
+            </div>
+            <div>
+              <p class="text-xs text-[#a3a9c1] mb-1">Total Packages</p>
+              <p
+                class="font-semibold text-sm text-[#1e2a4a] total-packages-count"
+              >
+                0
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-xl p-4 flex items-center space-x-4 shadow-sm"
+          >
+            <div
+              class="bg-[#e9f0ff] rounded-full w-12 h-12 flex items-center justify-center text-[#4b3aff]"
+            >
+              <i class="fas fa-check-circle text-lg"> </i>
+            </div>
+            <div>
+              <p class="text-xs text-[#a3a9c1] mb-1">Received Packages</p>
+              <p
+                class="font-semibold text-sm text-[#1e2a4a] received-packages-count"
+              >
+                0
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-xl p-4 flex items-center space-x-4 shadow-sm"
+          >
+            <div
+              class="bg-gradient-to-tr from-[#00c6ff] to-[#0072ff] rounded-full w-12 h-12 flex items-center justify-center text-white"
+            >
+              <i class="fas fa-pen-fancy text-lg"> </i>
+            </div>
+            <div>
+              <p class="text-xs text-[#a3a9c1] mb-1">Lorem Ipsum</p>
+              <p class="font-semibold text-sm text-[#1e2a4a]">154</p>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-xl p-4 flex items-center space-x-4 shadow-sm"
+          >
+            <div
+              class="bg-[#e9f0ff] rounded-full w-12 h-12 flex items-center justify-center text-[#4b3aff]"
+            >
+              <i class="fas fa-file-alt text-lg"> </i>
+            </div>
+            <div>
+              <p class="text-xs text-[#a3a9c1] mb-1">Lorem Ipsum</p>
+              <p class="font-semibold text-sm text-[#1e2a4a]">2935</p>
+            </div>
+          </div>
+        </div>
+        <!-- Table container -->
+        <section
+          class="bg-white rounded-xl p-6 shadow-sm overflow-x-auto max-w-full"
+        >
+          <div
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4"
+          >
+            <h3 class="font-semibold text-[#1e2a4a] text-lg mb-2 sm:mb-0">
+              Your Packages
+            </h3>
+            <div
+              class="flex items-center space-x-3 w-full sm:w-auto justify-end"
+            >
+              <button
+                onclick="openAddModal()"
+                class="inline-flex items-center px-3 py-1.5 bg-[#4b3aff] text-white text-sm rounded-full hover:bg-[#3a2ecc] transition-colors duration-200"
+              >
+                <i class="fas fa-plus text-xs mr-1.5"></i>
+                Add Data
+              </button>
+            </div>
+          </div>
+          <table class="w-full text-left text-sm text-[#a3a9c1]">
+            <thead>
+              <tr>
+                <th
+                  class="pb-3 px-4 font-semibold text-xs text-[#a3a9c1] uppercase min-w-[120px]"
+                >
+                  Package Name
+                </th>
+                <th
+                  class="pb-3 px-4 font-semibold text-xs text-[#a3a9c1] uppercase min-w-[120px]"
+                >
+                  Resi
+                </th>
+                <th
+                  class="pb-3 px-4 font-semibold text-xs text-[#a3a9c1] uppercase min-w-[120px]"
+                >
+                  Status
+                </th>
+                <th
+                  class="pb-3 px-4 font-semibold text-xs text-[#a3a9c1] uppercase min-w-[100px]"
+                >
+                  Photo
+                </th>
+                <th
+                  class="pb-3 px-4 font-semibold text-xs text-[#a3a9c1] uppercase min-w-[160px]"
+                >
+                  Received Date
+                </th>
+                <th
+                  class="pb-3 px-4 text-center font-semibold text-xs text-[#a3a9c1] uppercase min-w-[100px]"
+                >
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody class="text-[#1e2a4a] font-semibold">
+              <tr class="border-t border-[#f0f6ff]">
+                <td class="py-3 px-4">Marketplace</td>
+                <td class="py-3 px-4 font-normal text-[#1e2a4a]">
+                  <button
+                    onclick="redirectToTracking('sample_resi')"
+                    class="text-blue-600 hover:underline"
+                  >
+                    sample_resi
+                  </button>
+                </td>
+                <td class="py-3 px-4">
+                  <div class="flex items-center">
+                    <span
+                      class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#3bb44a] text-white text-xs"
+                    >
+                      <i class="fas fa-check"> </i>
+                    </span>
+                    <span> Approved </span>
+                  </div>
+                </td>
+                <td class="py-3 px-4">
+                  <button
+                    onclick="openPhotoModal('https://storage.googleapis.com/a1aa/image/5c9f01c6-488f-4920-a6f1-56a27ec709ff.jpg')"
+                    class="group relative w-10 h-10 rounded-full bg-[#e9f0ff] flex items-center justify-center hover:bg-[#4b3aff] transition-colors duration-200"
+                  >
+                    <i
+                      class="fas fa-image text-[#4b3aff] group-hover:text-white transition-colors duration-200"
+                    ></i>
+                  </button>
+                </td>
+                <td class="py-3 px-4">
+                  <!-- Placeholder for received date -->
+                  2025-07-05 10:30
+                </td>
+                <td class="py-3 px-4">
+                  <div
+                    class="flex items-center justify-center space-x-3 text-[#1e2a4a]"
+                  >
+                    <button
+                      onclick="openEditModal('sample_id', 'Marketplace', 'sample_resi', true)"
+                      class="hover:text-[#4b3aff] transition-colors duration-200"
+                    >
+                      <i class="fas fa-edit text-[#4b3aff]"></i>
+                    </button>
+                    <button
+                      onclick="hapusData('sample_id')"
+                      class="hover:text-red-500 transition-colors duration-200"
+                    >
+                      <i class="fas fa-trash-alt text-red-500"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+    <!-- Edit Modal -->
+    <div
+      id="editModal"
+      class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white"
+      >
+        <div class="mt-3">
+          <h3 class="text-lg font-semibold text-[#1e2a4a] mb-4">
+            Edit Package
+          </h3>
+          <form id="editForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-[#1e2a4a] mb-2"
+                >Package Name</label
+              >
+              <input
+                type="text"
+                id="edit_nama_barang"
+                class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#4b3aff]"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#1e2a4a] mb-2"
+                >Resi</label
+              >
+              <input
+                type="text"
+                id="edit_resi"
+                class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#4b3aff]"
+                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase()"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#1e2a4a] mb-2"
+                >Status</label
+              >
+              <select
+                id="edit_status"
+                class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#4b3aff]"
+              >
+                <option value="false">Belum diterima</option>
+                <option value="true">Sudah diterima</option>
+              </select>
+            </div>
+            <div class="flex justify-end space-x-3 mt-6">
+              <button
+                type="button"
+                onclick="closeEditModal()"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onclick="updateData()"
+                class="px-4 py-2 bg-[#4b3aff] text-white rounded-md hover:bg-[#3a2ecc]"
+              >
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Data Modal -->
+    <div
+      id="addModal"
+      class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white"
+      >
+        <div class="mt-3">
+          <h3 class="text-lg font-semibold text-[#1e2a4a] mb-4">
+            Add New Package
+          </h3>
+          <form id="addForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-[#1e2a4a] mb-2"
+                >Package Name</label
+              >
+              <input
+                type="text"
+                id="nama_barang"
+                class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#4b3aff]"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#1e2a4a] mb-2"
+                >Resi</label
+              >
+              <input
+                type="text"
+                id="resi"
+                class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#4b3aff]"
+                required
+                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase()"
+              />
+            </div>
+            <div class="flex justify-end space-x-3 mt-6">
+              <button
+                type="button"
+                onclick="closeAddModal()"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onclick="simpanData()"
+                class="px-4 py-2 bg-[#4b3aff] text-white rounded-md hover:bg-[#3a2ecc]"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Photo Modal before the closing body tag -->
+    <div
+      id="photoModal"
+      class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4"
+    >
+      <div class="relative p-5 w-full max-w-sm">
+        <div class="relative bg-white rounded-lg shadow">
+          <!-- Close button -->
+          <button
+            onclick="closePhotoModal()"
+            class="absolute -top-3 -right-3 bg-white rounded-full p-2 shadow-lg text-gray-500 hover:text-gray-700"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+          <!-- Photo container -->
+          <div class="p-1">
+            <img
+              id="modalPhoto"
+              src=""
+              alt="Package photo"
+              class="w-full h-auto rounded-lg"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div
+      id="toast"
+      class="fixed top-4 right-4 z-50 transform transition-transform duration-300 ease-in-out translate-x-full"
+    >
+      <div class="flex items-center p-4 mb-4 rounded-lg shadow">
+        <div
+          class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg"
+        >
+          <i class="fas"></i>
+        </div>
+        <div class="ml-3 text-sm font-normal" id="toastMessage"></div>
+        <button
+          onclick="hideToast()"
+          class="ml-4 -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex h-8 w-8"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Toast -->
+    <div
+      id="deleteConfirm"
+      class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4"
+    >
+      <div class="relative bg-white rounded-lg shadow-lg p-4 w-full max-w-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <div class="bg-red-100 rounded-full p-2">
+              <i class="fas fa-exclamation-triangle text-red-600"></i>
+            </div>
+            <p class="ml-3 text-sm font-medium text-gray-800">
+              Are you sure you want to delete this item?
+            </p>
+          </div>
+        </div>
+        <div class="flex justify-end space-x-2">
+          <button
+            onclick="cancelDelete()"
+            class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirmDeleteBtn"
+            class="px-3 py-1.5 bg-red-600 text-white rounded-md text-sm hover:bg-red-700"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const apiUrl = "http://localhost:1337/api/smartboxes?populate=*";
+      const baseUrl = "http://localhost:1337/api/smartboxes";
+      const userId = localStorage.getItem("userId");
+
+      if (!userId) {
+        window.location.href = "sign-in.html";
+      }
+
+      function getStatusBg(status) {
+        return status
+          ? "px-3 py-1 text-sm rounded-full bg-green-100 text-green-700"
+          : "px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-700";
+      }
+
+      function getStatusIcon(status) {
+        return status ? "fas fa-check-circle" : "fas fa-clock";
+      }
+
+      async function fetchPackages() {
+        try {
+          const response = await fetch(
+            `${apiUrl}&filters[owner][id][$eq]=${userId}`
+          );
+          const data = await response.json();
+
+          const tbody = document.querySelector("tbody");
+          tbody.innerHTML = "";
+
+          let incomingPackagesCount = 0; // Counter for incoming packages
+          let totalPackagesCount = 0; // Counter for total packages
+          let receivedPackagesCount = 0; // Counter for received packages
+
+          data.data.forEach((item) => {
+            totalPackagesCount++; // Increment total packages count
+
+            // Check if the package status is false
+            if (!item.status_penerimaan) {
+              incomingPackagesCount++;
+            }
+
+            // Check if the package status is true
+            if (item.status_penerimaan) {
+              receivedPackagesCount++;
+            }
+
+            // Validate received date based on status_penerimaan
+            const receivedDate =
+              item.status_penerimaan && item.updatedAt !== item.createdAt
+                ? `${new Date(item.updatedAt).toLocaleDateString()} ${new Date(
+                    item.updatedAt
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })}`
+                : "-";
+
+            const row = `
+        <tr class="border-t border-[#f0f6ff]">
+          <td class="py-3 px-4">${item.nama_barang || "-"}</td>
+          <td class="py-3 px-4 font-normal text-[#1e2a4a]">
+            <button
+              onclick="redirectToTracking('${item.resi}')"
+              class="text-blue-600 hover:underline"
+            >
+              ${item.resi || "-"}
+            </button>
+          </td>
+          <td class="py-3 px-4">
+            <div class="flex items-center">
+              <span class="${getStatusBg(item.status_penerimaan)}">
+                <i class="${getStatusIcon(item.status_penerimaan)} mr-1"></i>
+                ${item.status_penerimaan ? "Sudah diterima" : "Belum diterima"}
+              </span>
+            </div>
+          </td>
+          <td class="py-3 px-4">
+            <button
+              onclick="openPhotoModal('${
+                item.foto?.url ||
+                "https://storage.googleapis.com/a1aa/image/5c9f01c6-488f-4920-a6f1-56a27ec709ff.jpg"
+              }')"
+              class="group relative w-10 h-10 rounded-full bg-[#e9f0ff] flex items-center justify-center hover:bg-[#4b3aff] transition-colors duration-200">
+              <i class="fas fa-image text-[#4b3aff] group-hover:text-white transition-colors duration-200"></i>
+            </button>
+          </td>
+          <td class="py-3 px-4">${receivedDate}</td>
+          <td class="py-3 px-4">
+            <div class="flex items-center justify-center space-x-3">
+              <button
+                onclick="openEditModal('${item.documentId}', '${
+              item.nama_barang
+            }', '${item.resi}', ${item.status_penerimaan})"
+                class="hover:text-[#4b3aff] transition-colors duration-200"
+              >
+                <i class="fas fa-edit text-[#4b3aff]"></i>
+              </button>
+              <button
+                onclick="hapusData('${item.documentId}')"
+                class="hover:text-red-500 transition-colors duration-200"
+              >
+                <i class="fas fa-trash-alt text-red-500"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+            tbody.innerHTML += row;
+          });
+
+          // Update Incoming Packages count
+          document.querySelector(".incoming-packages-count").textContent =
+            incomingPackagesCount;
+
+          // Update Total Packages count
+          document.querySelector(".total-packages-count").textContent =
+            totalPackagesCount;
+
+          // Update Received Packages count
+          document.querySelector(".received-packages-count").textContent =
+            receivedPackagesCount;
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+
+      function showToast(message, type = "success") {
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toastMessage");
+        const icon = toast.querySelector(".fas");
+        const div = toast.querySelector("div");
+        const button = toast.querySelector("button");
+
+        // Set styles based on type
+        if (type === "success") {
+          div.className =
+            "flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50";
+          icon.className = "fas fa-check-circle";
+          button.className =
+            "ml-4 text-green-800 hover:text-green-900 rounded-lg p-1.5 inline-flex h-8 w-8";
+        } else if (type === "error") {
+          div.className =
+            "flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50";
+          icon.className = "fas fa-times-circle";
+          button.className =
+            "ml-4 text-red-800 hover:text-red-900 rounded-lg p-1.5 inline-flex h-8 w-8";
+        } else if (type === "warning") {
+          div.className =
+            "flex items-center p-4 mb-4 text-yellow-800 rounded-lg bg-yellow-50";
+          icon.className = "fas fa-exclamation-circle";
+          button.className =
+            "ml-4 text-yellow-800 hover:text-yellow-900 rounded-lg p-1.5 inline-flex h-8 w-8";
+        }
+
+        toastMessage.textContent = message;
+        toast.classList.remove("translate-x-full");
+
+        setTimeout(() => hideToast(), 3000);
+      }
+
+      function hideToast() {
+        document.getElementById("toast").classList.add("translate-x-full");
+      }
+
+      async function updateData() {
+        const nama_barang = document
+          .getElementById("edit_nama_barang")
+          .value.trim();
+        const resi = document.getElementById("edit_resi").value.trim();
+        const status_penerimaan =
+          document.getElementById("edit_status").value === "true";
+
+        if (nama_barang === "" || resi === "") {
+          showToast("Package name and Resi are required!", "warning");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${baseUrl}/${currentEditId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: {
+                nama_barang,
+                resi,
+                status_penerimaan,
+              },
+            }),
+          });
+
+          if (response.ok) {
+            showToast("Data updated successfully!");
+            closeEditModal();
+            fetchPackages();
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          showToast("Failed to update data!", "error");
+        }
+      }
+
+      let deleteId = null;
+
+      function hapusData(documentId) {
+        deleteId = documentId;
+        const confirmToast = document.getElementById("deleteConfirm");
+        confirmToast.classList.remove("hidden");
+
+        document.getElementById("confirmDeleteBtn").onclick = async () => {
+          try {
+            await fetch(`${baseUrl}/${deleteId}`, {
+              method: "DELETE",
+            });
+            showToast("Data deleted successfully!");
+            cancelDelete();
+            fetchPackages();
+          } catch (error) {
+            console.error("Error:", error);
+            showToast("Failed to delete data!", "error");
+          }
+        };
+      }
+
+      function cancelDelete() {
+        document.getElementById("deleteConfirm").classList.add("hidden");
+        deleteId = null;
+      }
+
+      let currentEditId = null;
+
+      function openEditModal(documentId, nama_barang, resi, status_penerimaan) {
+        currentEditId = documentId;
+        document.getElementById("edit_nama_barang").value = nama_barang;
+        document.getElementById("edit_resi").value = resi;
+        document.getElementById("edit_status").value = status_penerimaan;
+        document.getElementById("editModal").classList.remove("hidden");
+      }
+
+      function closeEditModal() {
+        document.getElementById("editModal").classList.add("hidden");
+      }
+
+      fetchPackages();
+
+      // Add these new functions for photo modal
+      function openPhotoModal(photoUrl) {
+        const modal = document.getElementById("photoModal");
+        const modalImg = document.getElementById("modalPhoto");
+        modalImg.src = photoUrl.startsWith("http")
+          ? photoUrl
+          : `http://localhost:1337${photoUrl}`;
+        modal.classList.remove("hidden");
+      }
+
+      function closePhotoModal() {
+        document.getElementById("photoModal").classList.add("hidden");
+      }
+
+      function toggleDropdown() {
+        const dropdown = document.getElementById("avatarDropdown");
+
+        if (dropdown.classList.contains("hidden")) {
+          // Show dropdown with animation
+          dropdown.classList.remove("hidden");
+          setTimeout(() => {
+            dropdown.classList.remove("opacity-0", "scale-95");
+            dropdown.classList.add("opacity-100", "scale-100");
+          }, 10);
+        } else {
+          // Hide dropdown with animation
+          dropdown.classList.remove("opacity-100", "scale-100");
+          dropdown.classList.add("opacity-0", "scale-95");
+          setTimeout(() => {
+            dropdown.classList.add("hidden");
+          }, 200);
+        }
+      }
+
+      // Add to your existing script tag
+      function openAddModal() {
+        document.getElementById("addModal").classList.remove("hidden");
+      }
+
+      function closeAddModal() {
+        document.getElementById("addModal").classList.add("hidden");
+        document.getElementById("nama_barang").value = "";
+        document.getElementById("resi").value = "";
+      }
+
+      function simpanData() {
+        const nama_barang = document.getElementById("nama_barang").value.trim();
+        const resi = document.getElementById("resi").value.trim();
+        const userId = localStorage.getItem("userId");
+
+        if (nama_barang === "" || resi === "") {
+          showToast(
+            "Package name and tracking number are required!",
+            "warning"
+          );
+          return;
+        }
+
+        const data = {
+          data: {
+            nama_barang: nama_barang,
+            resi: resi,
+            owner: userId,
+          },
+        };
+
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then(() => {
+            showToast("Data saved successfully!");
+            closeAddModal();
+            fetchPackages();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showToast("Failed to save data!", "error");
+          });
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("avatarDropdown");
+        const avatarButton = document.getElementById("avatarButton");
+
+        if (
+          !avatarButton.contains(event.target) &&
+          !dropdown.contains(event.target)
+        ) {
+          // Only animate if dropdown is visible
+          if (!dropdown.classList.contains("hidden")) {
+            dropdown.classList.remove("opacity-100", "scale-100");
+            dropdown.classList.add("opacity-0", "scale-95");
+            setTimeout(() => {
+              dropdown.classList.add("hidden");
+            }, 200);
+          }
+        }
+      });
+
+      // Add this after userId initialization
+      document.addEventListener("DOMContentLoaded", function () {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user && user.username) {
+          document.getElementById("username").textContent = user.username;
+        }
+
+        // Initialize sidebar and main content state
+        setSidebarAndMainContentState();
+      });
+
+      function signOut() {
+        localStorage.removeItem("jwt");
+        localStorage.removeItem("user");
+        localStorage.removeItem("userId");
+        window.location.href = "sign-in.html";
+      }
+
+      function redirectToTracking(resi) {
+        const url = `cekresi.html?resi=${encodeURIComponent(resi)}`;
+        window.open(url, "_blank");
+      }
+
+      // Function to set sidebar and main content state based on screen width
+      function setSidebarAndMainContentState() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.querySelector("main");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        if (window.innerWidth >= 768) {
+          // md breakpoint
+          sidebar.classList.remove("-translate-x-full"); // Ensure sidebar is visible on desktop
+          mainContent.classList.remove("ml-0");
+          mainContent.classList.add("ml-64"); // Push main content for desktop
+          sidebarOverlay.classList.add("hidden"); // Hide overlay on desktop
+        } else {
+          sidebar.classList.add("-translate-x-full"); // Ensure sidebar is hidden on mobile
+          mainContent.classList.remove("ml-64");
+          mainContent.classList.add("ml-0"); // Reset main content margin for mobile
+          sidebarOverlay.classList.add("hidden"); // Hide overlay on mobile
+        }
+      }
+
+      // Sidebar toggle functionality
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.querySelector("main");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        if (sidebar.classList.contains("-translate-x-full")) {
+          // Show sidebar
+          sidebar.classList.remove("-translate-x-full");
+          mainContent.classList.remove("ml-0");
+          mainContent.classList.add("ml-64"); // Push main content
+          sidebarOverlay.classList.remove("hidden"); // Show overlay
+        } else {
+          // Hide sidebar
+          sidebar.classList.add("-translate-x-full");
+          mainContent.classList.remove("ml-64");
+          mainContent.classList.add("ml-0"); // Reset main content margin
+          sidebarOverlay.classList.add("hidden"); // Hide overlay
+        }
+      }
+
+      // Adjust main content margin on window resize to handle responsiveness
+      window.addEventListener("resize", setSidebarAndMainContentState);
+    </script>
+  </body>
+</html>
